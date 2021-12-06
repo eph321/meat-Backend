@@ -4,7 +4,7 @@ var express = require('express');
 var router = express.Router();
 var mongoose = require('mongoose');
 const userModel = require('../models/users');
-const chatModel = require('../models/chat');
+const chatModel = require('../models/chats');
 const eventModel = require('../models/events');
 
 /* GET home page. */

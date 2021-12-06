@@ -1,12 +1,11 @@
 var mongoose = require('mongoose')
 
 
-var PlaceSchema = mongoose.Schema({
-    photo : String,
+var placeSchema = mongoose.Schema({
+    type : String,
     name : String,
     adress : String,
     note: String,
-    // externalId: "theFORK"),
    });
  
 
@@ -19,12 +18,12 @@ var eventSchema = mongoose.Schema({
     planner: [{ type: mongoose.Schema.Types.ObjectId, ref: 'users' }],    
     guests: [{ type: mongoose.Schema.Types.ObjectId, ref: 'users' }],
     description: String,
-    place: [PlaceSchema],
-    budget: String , 
+    place: [placeSchema],
+    budget: Number , 
     booking_status: String,
-    capacity: Number ,
+    capacity: Number,
 })
 
-var eventModel = mongoose.model('orders', eventSchema)
+var eventModel = mongoose.model('events', eventSchema)
 
 module.exports = eventModel;
