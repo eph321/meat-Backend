@@ -2,7 +2,7 @@ var mongoose = require('mongoose')
 
 var chatSchema = mongoose.Schema({
     date: Number,
-    content: Number,
+    content: String,
     event_id: [{ type: mongoose.Schema.Types.ObjectId, ref: 'events' }],
     from: String,
    

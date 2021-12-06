@@ -1,5 +1,6 @@
 var mongoose = require('mongoose')
-var MessageSchema = mongoose.Schema({
+
+var messageSchema = mongoose.Schema({
     status : String,
     date : Date,
     sender : String,
@@ -12,20 +13,20 @@ var userSchema = mongoose.Schema({
     token : uid2(32),
     firstName: String,
     lastName: String,
-    dateOfBirth: Number,
+    dateOfBirth: Date,
     password: hash,
-    gender: Number,
+    gender: String,
     email: String,
     adresses: String,
     avatar: String,
     phone : String,
     // preference : String,
     description : String,
-    userNote : String,
-    plannerNote : String,
-    messages: [MessageSchema],
+    userNote : Number,
+    plannerNote : Number,
+    messages: [messageSchema],
     event_id: [{ type: mongoose.Schema.Types.ObjectId, ref: 'events' }],
-    favouriteBuddies : Boolean,
+    favouriteBuddies : [{ type: mongoose.Schema.Types.ObjectId, ref: 'users' }],
     chat: [{ type: mongoose.Schema.Types.ObjectId, ref: 'chats' }],
 
   
