@@ -14,3 +14,4 @@ mongoose.connect('mongodb+srv://Neera:azerty12@cluster0.almkw.mongodb.net/meat?r
 )
 
 module.exports = mongoose
+

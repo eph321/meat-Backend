@@ -11,7 +11,7 @@ var placeSchema = mongoose.Schema({
 
 
 var eventSchema = mongoose.Schema({
-    token : uid2(32),
+    token : String,
     dateInsert: Date,
     date: Date,
     title: String,

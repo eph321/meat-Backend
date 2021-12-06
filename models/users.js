@@ -10,11 +10,11 @@ var messageSchema = mongoose.Schema({
  
 
 var userSchema = mongoose.Schema({
-    token : uid2(32),
+    token : String,
     firstName: String,
     lastName: String,
     dateOfBirth: Date,
-    password: hash,
+    password: String,
     gender: String,
     email: String,
     adresses: String,
