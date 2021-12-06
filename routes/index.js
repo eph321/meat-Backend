@@ -52,4 +52,29 @@ router.post('/sign-in', async function(req,res,next){
   
 });
 
+//route pour ajouter la table
+
+router.post('/add-table', async function(req,res,next){
+
+  
+  var addTable = new eventModel({
+      date: req.body.date,
+      title:req.body.title,
+      place:req.body.place.name,
+      address:  req.body.place.adress,
+      type: req.body.place.type,
+      description: req.body.description,
+      age : req.body.age,
+      capacity : req.body.capacity,
+      budget : req.body.budget,
+      token : req.body.token
+
+
+      
+  }); 
+  
+  var newTable = await addTable.save();
+  res.json({result:newTable ? true : false, newTable });
+});
+
 module.exports = router;

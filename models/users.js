@@ -17,7 +17,7 @@ var userSchema = mongoose.Schema({
     password: String,
     gender: String,
     email: String,
-    adresses: String,
+    addresses: String,
     avatar: String,
     phone : String,
     // preference : String,

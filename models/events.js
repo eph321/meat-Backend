@@ -4,7 +4,7 @@ var mongoose = require('mongoose')
 var placeSchema = mongoose.Schema({
     type : String,
     name : String,
-    adress : String,
+    address : String,
     note: String,
    });
  
@@ -22,6 +22,7 @@ var eventSchema = mongoose.Schema({
     budget: Number , 
     booking_status: String,
     capacity: Number,
+    age : String,
 })
 
 var eventModel = mongoose.model('events', eventSchema)
