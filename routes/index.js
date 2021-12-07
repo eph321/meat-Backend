@@ -44,19 +44,11 @@ router.post('/sign-up', async function (req, res, next) {
       password: hash,
       token: uid2(32),
     })
-<<<<<<< HEAD
   
     var newUserSave = await newUser.save()};
     console.log(newUserSave)
   
   res.json({result:newUserSave ? true : false, newUserSave });
-=======
-
-    var newUserSave = await newUser.save()
-  };
-
-  res.json({ result: newUserSave ? true : false, newUserSave });
->>>>>>> 426873eee93cda5bdb17b478dda10471dbdc9972
 });
 
 //ROUTE UPLOAD AVATAR
