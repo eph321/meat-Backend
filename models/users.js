@@ -23,7 +23,6 @@ var userSchema = mongoose.Schema({
     preference1: String,
     preference2: String,
     preference3: String,
-    // preference : String,
     description : String,
     userNote : Number,
     plannerNote : Number,

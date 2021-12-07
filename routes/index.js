@@ -41,6 +41,7 @@ router.post('/sign-up', async function (req, res, next) {
       preference1: req.body.preference1,
       preference2: req.body.preference2,  
       preference3: req.body.preference3,
+      description: req.body.description,
       password: hash,
       token: uid2(32),
     })
@@ -69,7 +70,7 @@ router.post('/uploadAvatar', async function(req, res, next) {
   
 });
 
-//ROUTE SIGN UP
+//ROUTE SIGN in
 
 router.post('/sign-in', async function (req, res, next) {
 
