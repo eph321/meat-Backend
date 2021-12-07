@@ -6,6 +6,15 @@ const chatModel = require('../models/chats');
 const eventModel = require('../models/events');
 var bcrypt = require('bcrypt');
 var uid2 = require('uid2');
+var fs = require('fs');
+
+var cloudinary = require('cloudinary').v2;
+cloudinary.config({
+  cloud_name: "da3gufsec",
+  api_key: "713285779721675",
+  api_secret: "y22CviNN8xuHOULwdIwT5hvcCFk",
+  secure: true,
+})
 
 // ROUTE POUR SIGN UP
 
@@ -24,14 +33,40 @@ router.post('/sign-up', async function(req, res, next) {
       firstname: req.body.firstName,
       lastname: req.body.lastName,
       email: req.body.email,
+      dateOfBirth:req.body.dateOfBirth,
+      gender: req.body.gender,
+      addresses: req.body.addresses,
+      avatar: req.body.avatar,
+      phone : req.body.phone,
+      preference1: req.body.preference1,
+      preference2: req.body.preference2,  
+      preference3: req.body.preference3,
       password: hash,
       token: uid2(32),
-
     })
   
     var newUserSave = await newUser.save()};
+    console.log(newUserSave)
   
   res.json({result:newUserSave ? true : false, newUserSave });
+});
+
+//ROUTE UPLOAD AVATAR
+
+router.post('/uploadAvatar', async function(req, res, next) {
+  
+  var pictureName = './tmp/'+uniqid()+'.jpg';
+  var resultCopy = await req.files.avatar.mv(pictureName);
+  if(!resultCopy) {
+    let resultCloudinary = await cloudinary.uploader.upload(pictureName);
+    console.log(resultCloudinary)
+    res.json({cloud : resultCloudinary });
+  } else {
+    res.json({error: resultCopy});
+  }
+
+  fs.unlinkSync(pictureName);
+  
 });
 
 //ROUTE SIGN UP
