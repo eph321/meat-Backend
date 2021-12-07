@@ -9,7 +9,7 @@ var uid2 = require('uid2');
 
 // ROUTE POUR SIGN UP
 
-router.post('/sign-up', async function(req, res, next) {
+router.post('/sign-up', async function (req, res, next) {
   const cost = 10;
   const hash = bcrypt.hashSync(req.body.password, cost);
 
@@ -19,7 +19,7 @@ router.post('/sign-up', async function(req, res, next) {
 
   // SI LE MAIL N'EXISTE PAS CREER UN NOUVEAU COMPTE avec TOKEN + HASH DU MDP
 
-  if(!searchUser){
+  if (!searchUser) {
     var newUser = new userModel({
       firstname: req.body.firstName,
       lastname: req.body.lastName,
@@ -28,15 +28,16 @@ router.post('/sign-up', async function(req, res, next) {
       token: uid2(32),
 
     })
-  
-    var newUserSave = await newUser.save()};
-  
-  res.json({result:newUserSave ? true : false, newUserSave });
+
+    var newUserSave = await newUser.save()
+  };
+
+  res.json({ result: newUserSave ? true : false, newUserSave });
 });
 
 //ROUTE SIGN UP
 
-router.post('/sign-in', async function(req,res,next){
+router.post('/sign-in', async function (req, res, next) {
 
   var searchUser = await userModel.findOne({
     email: req.body.email
@@ -44,37 +45,39 @@ router.post('/sign-in', async function(req,res,next){
 
   if (bcrypt.compareSync(req.body.password, searchUser.password)) {
     res.json({ login: true, searchUser });
-    } else {
+  } else {
     res.json({ login: false });
   }
 
 
-  
+
 });
 
 //route pour ajouter la table
 
-router.post('/add-table', async function(req,res,next){
+router.post('/add-table', async function (req, res, next) {
 
-  
+
   var addTable = new eventModel({
-      date: req.body.date,
-      title:req.body.title,
-      place:req.body.place.name,
-      address:  req.body.place.adress,
-      type: req.body.place.type,
-      description: req.body.description,
-      age : req.body.age,
-      capacity : req.body.capacity,
-      budget : req.body.budget,
-      token : req.body.token
+    date: req.body.date,
+    title: req.body.title,
+    place: {
+      name: req.body.placename,
+      address: req.body.placeaddress,
+      type: req.body.placetype,
+    },
+    description: req.body.description,
+    age: req.body.age,
+    capacity: req.body.capacity,
+    budget: req.body.budget,
+    token: req.body.token
 
 
-      
-  }); 
-  
+
+  });
+
   var newTable = await addTable.save();
-  res.json({result:newTable ? true : false, newTable });
+  res.json({ result: newTable ? true : false, newTable });
 });
 
 module.exports = router;
