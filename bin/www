@@ -28,7 +28,9 @@ io.on('connection', function(socket){
     console.log(message);
     io.emit('sendMessageToAll', message);
   });
- 
+
+});
+
 
 /**
  * Listen on provided port, on all network interfaces.
