@@ -41,14 +41,15 @@ router.post('/sign-up', async function (req, res, next) {
       preference1: req.body.preference1,
       preference2: req.body.preference2,  
       preference3: req.body.preference3,
+      description: req.body.description,
       password: hash,
       token: uid2(32),
     })
-
-    var newUserSave = await newUser.save()
-  };
-
-  res.json({ result: newUserSave ? true : false, newUserSave });
+  
+    var newUserSave = await newUser.save()};
+    console.log(newUserSave)
+  
+  res.json({result:newUserSave ? true : false, newUserSave });
 });
 
 //ROUTE UPLOAD AVATAR
@@ -69,7 +70,7 @@ router.post('/uploadAvatar', async function(req, res, next) {
   
 });
 
-//ROUTE SIGN UP
+//ROUTE SIGN in
 
 router.post('/sign-in', async function (req, res, next) {
 
@@ -112,6 +113,12 @@ router.post('/add-table', async function (req, res, next) {
 
   var newTable = await addTable.save();
   res.json({ result: newTable ? true : false, newTable });
+});
+
+router.get('/search-table', async function(req,res,next){
+  var result = await eventModel.find();
+  console.log(result, "okok");
+  res.json({result: result});
 });
 
 module.exports = router;
