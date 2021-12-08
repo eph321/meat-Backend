@@ -4,6 +4,7 @@ var mongoose = require('mongoose');
 const userModel = require('../models/users');
 const chatModel = require('../models/chats');
 const eventModel = require('../models/events');
+const conversationModel = require('../models/conversations')
 var bcrypt = require('bcrypt');
 var uid2 = require('uid2');
 var fs = require('fs');
@@ -88,6 +89,33 @@ router.post('/sign-in', async function (req, res, next) {
 
 });
 
+
+router.post('/add-buddy', async function(req,res, next){
+  let currentUser = await userModel.findOne({
+    token: req.body.userToken,
+  })
+
+
+  var newConversation = new conversationModel({
+    date: req.body.date,
+    content: "",
+    conversationRequest : false,
+    conversationToken : uid2(32)
+
+  })
+
+  var conversationSchema = mongoose.Schema({
+    date : Date,
+    content: String,
+    author : String,
+    conversationToken : String,
+    conversationRequest : Boolean,
+    user_id : [{type : mongoose.Schema.Types.ObjectId, ref: 'users'}]
+    
+})
+})
+
+
 //route pour ajouter la table
 
 router.post('/add-table', async function (req, res, next) {
@@ -96,16 +124,18 @@ router.post('/add-table', async function (req, res, next) {
   var addTable = new eventModel({
     date: req.body.date,
     title: req.body.title,
-    placeName: req.body.placeName,
-    placeAddress: req.body.placeAddress,
-    placeType: req.body.placeType,
+    placeName: req.body.placename,
+    placeAddress: req.body.placeaddress,
+    placeType: req.body.placetype,
     placeNote: req.body.placeNote,
     description: req.body.description,
     age: req.body.age,
     capacity: req.body.capacity,
     budget: req.body.budget,
-    planner: req.body.planner,
     token: req.body.token
+
+
+
   });
 
   var newTable = await addTable.save();
