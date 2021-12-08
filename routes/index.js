@@ -115,4 +115,10 @@ router.post('/add-table', async function (req, res, next) {
   res.json({ result: newTable ? true : false, newTable });
 });
 
+router.get('/search-table', async function(req,res,next){
+  var result = await eventModel.find();
+  console.log(result, "okok");
+  res.json({result: result});
+});
+
 module.exports = router;
