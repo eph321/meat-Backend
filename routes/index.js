@@ -96,23 +96,16 @@ router.post('/add-buddy', async function(req,res, next){
   })
 
 
-  var newConversation = new conversationModel({
-    date: req.body.date,
-    content: "",
+  let  newConversation = new conversationModel({   
+    
     conversationRequest : false,
     conversationToken : uid2(32)
 
   })
 
-  var conversationSchema = mongoose.Schema({
-    date : Date,
-    content: String,
-    author : String,
-    conversationToken : String,
-    conversationRequest : Boolean,
-    user_id : [{type : mongoose.Schema.Types.ObjectId, ref: 'users'}]
+
     
-})
+
 })
 
 
@@ -146,5 +139,10 @@ router.get('/search-table', async function(req,res,next){
   var result = await eventModel.find();
   res.json({result: result});
 });
+
+router.get('/search-users',async function (req,res,next){
+  var result = await userModel.find();
+  res.json({result: result});
+})
 
 module.exports = router;
