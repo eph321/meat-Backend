@@ -96,18 +96,16 @@ router.post('/add-table', async function (req, res, next) {
   var addTable = new eventModel({
     date: req.body.date,
     title: req.body.title,
-    placeName: req.body.placename,
-    placeAddress: req.body.placeaddress,
-    placeType: req.body.placetype,
+    placeName: req.body.placeName,
+    placeAddress: req.body.placeAddress,
+    placeType: req.body.placeType,
     placeNote: req.body.placeNote,
     description: req.body.description,
     age: req.body.age,
     capacity: req.body.capacity,
     budget: req.body.budget,
+    planner: req.body.planner,
     token: req.body.token
-
-
-
   });
 
   var newTable = await addTable.save();
