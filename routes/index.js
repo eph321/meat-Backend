@@ -96,11 +96,10 @@ router.post('/add-table', async function (req, res, next) {
   var addTable = new eventModel({
     date: req.body.date,
     title: req.body.title,
-    place: {
-      name: req.body.placename,
-      address: req.body.placeaddress,
-      type: req.body.placetype,
-    },
+    placeName: req.body.placename,
+    placeAddress: req.body.placeaddress,
+    placeType: req.body.placetype,
+    placeNote: req.body.placeNote,
     description: req.body.description,
     age: req.body.age,
     capacity: req.body.capacity,
@@ -117,7 +116,6 @@ router.post('/add-table', async function (req, res, next) {
 
 router.get('/search-table', async function(req,res,next){
   var result = await eventModel.find();
-  console.log(result, "okok");
   res.json({result: result});
 });
 
