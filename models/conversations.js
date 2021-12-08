@@ -1,5 +1,5 @@
 var mongoose = require('mongoose');
-const { request } = require('../app');
+
 
 var chatSchema = mongoose.Schema({
     date : Date,
@@ -9,7 +9,7 @@ var chatSchema = mongoose.Schema({
 
 var requestSchema = mongoose.Schema({
     userToken: String,
-    requestGranted : Boolean
+    friendStatus : Boolean
 })   
 
 var conversationSchema = mongoose.Schema({    
