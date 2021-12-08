@@ -31,10 +31,10 @@ router.post('/sign-up', async function (req, res, next) {
 
   if (!searchUser) {
     var newUser = new userModel({
-      firstname: req.body.firstName,
-      lastname: req.body.lastName,
+      firstname: req.body.firstname,
+      lastname: req.body.lastname,
       email: req.body.email,
-      dateOfBirth:req.body.dateOfBirth,
+      dateofbirth:req.body.dateofbirth,
       gender: req.body.gender,
       addresses: req.body.addresses,
       avatar: req.body.avatar,
@@ -55,7 +55,7 @@ router.post('/sign-up', async function (req, res, next) {
 
 //ROUTE UPLOAD AVATAR
 
-router.post('/uploadAvatar', async function(req, res, next) {
+router.post('/upload-avatar', async function(req, res, next) {
   
   var pictureName = './tmp/'+uniqid()+'.jpg';
   var resultCopy = await req.files.avatar.mv(pictureName);
@@ -142,7 +142,7 @@ router.get('/search-table', async function(req,res,next){
 
 router.get('/search-users',async function (req,res,next){
   var result = await userModel.find();
-  res.json({result: result});
+  res.json({ result: result});
 })
 
 module.exports = router;
