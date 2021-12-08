@@ -8,6 +8,8 @@ var chatSchema = mongoose.Schema({
    
 })
 
+
+
 var chatModel = mongoose.model('chats', chatSchema)
 
 module.exports = chatModel;
