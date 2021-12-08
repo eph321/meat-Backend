@@ -61,7 +61,7 @@ router.post('/add-table', async function(req,res,next){
       date: req.body.date,
       title:req.body.title,
       place:req.body.place.name,
-      address:  req.body.place.adress,
+      address:  req.body.place.address,
       type: req.body.place.type,
       description: req.body.description,
       age : req.body.age,
@@ -75,6 +75,12 @@ router.post('/add-table', async function(req,res,next){
   
   var newTable = await addTable.save();
   res.json({result:newTable ? true : false, newTable });
+});
+
+router.get('/search-table', async function(req,res,next){
+  var result = await eventModel.find();
+  console.log(result, "okok");
+  res.json({result: result});
 });
 
 module.exports = router;
