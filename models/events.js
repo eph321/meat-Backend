@@ -6,7 +6,7 @@ var eventSchema = mongoose.Schema({
     dateInsert: Date,
     date: Date,
     title: String,
-    planner: [{ type: mongoose.Schema.Types.ObjectId, ref: 'users' }],    
+    planner: String,    
     guests: [{ type: mongoose.Schema.Types.ObjectId, ref: 'users' }],
     description: String,
     placeName: String,
