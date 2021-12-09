@@ -17,7 +17,7 @@ var conversationSchema = mongoose.Schema({
     requestStatus : [requestSchema],
     conversationToken : String,
     conversationRequest : Boolean,
-    user_id : [{type : mongoose.Schema.Types.ObjectId, ref: 'users'}]
+    exchangers : [{type : mongoose.Schema.Types.ObjectId, ref: 'users'}]
     
 })
 

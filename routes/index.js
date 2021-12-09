@@ -91,23 +91,27 @@ router.post('/sign-in', async function (req, res, next) {
 
 
 router.post('/add-buddy', async function(req,res, next){
-  let currentUser = await userModel.findOne({
-    token: req.body.userToken,
+  let currentUser = await userModel.findOne({ token: req.body.token
+      })
+  currentUser.favouriteBuddies = [...currentUser.favouriteBuddies, req.body.id]
+  var UpdatedUser = await currentUser.save()
+  console.log(UpdatedUser.favouriteBuddies)
+res.json({result: UpdatedUser});
   })
 
 
-  let  newConversation = new conversationModel({   
-    
-    conversationRequest : false,
-    conversationToken : uid2(32)
-
-  })
 
 
-    
+router.post('/accept-buddy',async function (req,res,next){
 
 })
 
+router.get('/load-chat-messages',async function(req,res,next){
+
+})
+router.get('update-chat-messages',async function (req,resn,next){
+
+})
 
 //route pour ajouter la table
 
