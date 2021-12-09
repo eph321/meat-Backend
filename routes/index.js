@@ -96,9 +96,9 @@ router.post('/add-table', async function (req, res, next) {
   var addTable = new eventModel({
     date: req.body.date,
     title: req.body.title,
-    placeName: req.body.placename,
-    placeAddress: req.body.placeaddress,
-    placeType: req.body.placetype,
+    placeName: req.body.placeName,
+    placeAddress: req.body.placeAddress,
+    placeType: req.body.placeType,
     placeNote: req.body.placeNote,
     description: req.body.description,
     age: req.body.age,
@@ -116,6 +116,12 @@ router.post('/add-table', async function (req, res, next) {
 
 router.get('/search-table', async function(req,res,next){
   var result = await eventModel.find();
+  res.json({result: result});
+});
+
+router.get('/join-table/:_id', async function(req,res,next){
+  var result = await eventModel.findOne({_id : req.params._id});
+  console.log(req.params._id)
   res.json({result: result});
 });
 
