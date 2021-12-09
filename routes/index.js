@@ -179,8 +179,16 @@ router.post('/add-table', async function (req, res, next) {
 
 router.get('/search-table', async function(req,res,next){
   var result = await eventModel.find();
+
   res.json({result: result});
 });
+
+router.get('/filter-table/:placeType', async function(req,res,next){
+
+  var result = await eventModel.find({placeType: req.params.placeType})
+
+  res.json({result})
+})
 
 
 router.get('/search-user', async function(req,res,next){
@@ -190,8 +198,9 @@ router.get('/search-user', async function(req,res,next){
 
 router.get('/join-table/:_id', async function(req,res,next){
   var result = await eventModel.findOne({_id : req.params._id});
-  console.log(req.params._id)
+
   res.json({result: result});
+
 });
 module.exports = router;
 
