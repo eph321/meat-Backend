@@ -143,6 +143,10 @@ router.get('/search-table', async function(req,res,next){
 });
 
 
+router.get('/search-user', async function(req,res,next){
+  var result = await userModel.find();
+  res.json({result: result});
+});
 
 router.get('/join-table/:_id', async function(req,res,next){
   var result = await eventModel.findOne({_id : req.params._id});
@@ -151,7 +155,4 @@ router.get('/join-table/:_id', async function(req,res,next){
 });
 module.exports = router;
 
-router.get('/search-user', async function(req,res,next){
-  var result = await userModel.find();
-  res.json({result: result});
-});
+
