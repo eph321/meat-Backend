@@ -113,8 +113,6 @@ router.post('/add-buddy', async function(req,res, next){
 
 router.post('/add-table', async function (req, res, next) {
 
-  console.log("pour stephan")
-
   var addTable = new eventModel({
     date: req.body.date,
     title: req.body.title,
@@ -126,9 +124,8 @@ router.post('/add-table', async function (req, res, next) {
     age: req.body.age,
     capacity: req.body.capacity,
     budget: req.body.budget,
-    token: req.body.token
-    
-
+    token: req.body.token,
+    planner: req.body.planner
   });
 
   var newTable = await addTable.save();
