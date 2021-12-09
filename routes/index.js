@@ -113,6 +113,7 @@ router.post('/add-buddy', async function(req,res, next){
 
 router.post('/add-table', async function (req, res, next) {
 
+  console.log("pour stephan")
 
   var addTable = new eventModel({
     date: req.body.date,
