@@ -141,7 +141,8 @@ router.get('/search-table', async function(req,res,next){
 
 router.get('/join-table/:_id', async function(req,res,next){
   var result = await eventModel.findOne({_id : req.params._id});
-  console.log(req.params._id)
+
   res.json({result: result});
+
 });
 module.exports = router;
