@@ -134,8 +134,16 @@ router.post('/add-table', async function (req, res, next) {
 
 router.get('/search-table', async function(req,res,next){
   var result = await eventModel.find();
+
   res.json({result: result});
 });
+
+router.get('/filter-table/:placeType', async function(req,res,next){
+
+  var result = await eventModel.find({placeType: req.params.placeType})
+
+  res.json({result})
+})
 
 
 
