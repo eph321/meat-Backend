@@ -91,23 +91,28 @@ router.post('/sign-in', async function (req, res, next) {
 
 
 router.post('/add-buddy', async function(req,res, next){
-  let currentUser = await userModel.findOne({
-    token: req.body.userToken,
+  let currentUser = await userModel.findOne({ token: req.body.token
+      })
+
+  currentUser.buddies = [...currentUser.buddies, req.body.buddy-token]
+  var UpdatedUser = await currentUser.save()
+  console.log(UpdatedUser.buddies)
+res.json({result: UpdatedUser});
   })
 
 
-  let  newConversation = new conversationModel({   
-    
-    conversationRequest : false,
-    conversationToken : uid2(32)
-
-  })
 
 
-    
+router.post('/accept-buddy',async function (req,res,next){
 
 })
 
+router.get('/load-chat-messages',async function(req,res,next){
+
+})
+router.get('update-chat-messages',async function (req,resn,next){
+
+})
 
 //route pour ajouter la table
 
@@ -146,6 +151,10 @@ router.get('/filter-table/:placeType', async function(req,res,next){
 })
 
 
+router.get('/search-user', async function(req,res,next){
+  var result = await userModel.find();
+  res.json({result: result});
+});
 
 router.get('/join-table/:_id', async function(req,res,next){
   var result = await eventModel.findOne({_id : req.params._id});
@@ -154,3 +163,5 @@ router.get('/join-table/:_id', async function(req,res,next){
 
 });
 module.exports = router;
+
+
