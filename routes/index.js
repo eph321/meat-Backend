@@ -95,10 +95,11 @@ router.post('/add-buddy', async function(req,res, next){
       })
 
   currentUser.buddies = [...currentUser.buddies, req.body.buddy-token]
-  var UpdatedUser = await currentUser.save()
+  let UpdatedUser = await currentUser.save()
   console.log(UpdatedUser.buddies)
 res.json({result: UpdatedUser});
   })
+
 
 
 
