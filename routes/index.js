@@ -117,22 +117,19 @@ router.get('update-chat-messages',async function (req,resn,next){
 
 router.post('/add-table', async function (req, res, next) {
 
-
   var addTable = new eventModel({
     date: req.body.date,
     title: req.body.title,
-    placeName: req.body.placename,
-    placeAddress: req.body.placeaddress,
-    placeType: req.body.placetype,
+    placeName: req.body.placeName,
+    placeAddress: req.body.placeAddress,
+    placeType: req.body.placeType,
     placeNote: req.body.placeNote,
     description: req.body.description,
     age: req.body.age,
     capacity: req.body.capacity,
     budget: req.body.budget,
-    token: req.body.token
-
-
-
+    token: req.body.token,
+    planner: req.body.planner
   });
 
   var newTable = await addTable.save();
@@ -144,9 +141,11 @@ router.get('/search-table', async function(req,res,next){
   res.json({result: result});
 });
 
-router.get('/search-users',async function (req,res,next){
-  var result = await userModel.find();
-  res.json({ result: result});
-})
 
+
+router.get('/join-table/:_id', async function(req,res,next){
+  var result = await eventModel.findOne({_id : req.params._id});
+  console.log(req.params._id)
+  res.json({result: result});
+});
 module.exports = router;
