@@ -124,22 +124,7 @@ router.post('/accept-buddy', async function(req,res, next){
 
     if(  otherUser !== null ){
       let  newConversation = new conversationModel({
-        conversationToken :  uid2(32),
-        lastname: req.body.lastname,
-        email: req.body.email,
-        dateofbirth:req.body.dateofbirth,
-        gender: req.body.gender,
-        addresses: req.body.addresses,
-        avatar: req.body.avatar,
-        phone : req.body.phone,
-        preference1: req.body.preference1,
-        preference2: req.body.preference2,
-        preference3: req.body.preference3,
-        description: req.body.description,
-        password: hash,
-        token: uid2(32),
-
-    }
+        conversationToken :  uid2(32)           })};
 
 
     res.json({ result: true, buddies : currentUserSaved });
