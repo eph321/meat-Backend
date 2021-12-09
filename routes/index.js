@@ -93,9 +93,10 @@ router.post('/sign-in', async function (req, res, next) {
 router.post('/add-buddy', async function(req,res, next){
   let currentUser = await userModel.findOne({ token: req.body.token
       })
-  currentUser.favouriteBuddies = [...currentUser.favouriteBuddies, req.body.id]
+
+  currentUser.buddies = [...currentUser.buddies, req.body.buddy-token]
   var UpdatedUser = await currentUser.save()
-  console.log(UpdatedUser.favouriteBuddies)
+  console.log(UpdatedUser.buddies)
 res.json({result: UpdatedUser});
   })
 

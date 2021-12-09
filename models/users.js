@@ -28,6 +28,7 @@ var userSchema = mongoose.Schema({
     plannerNote : Number,
     messages: [messageSchema],
     event_id: [{ type: mongoose.Schema.Types.ObjectId, ref: 'events' }],
+    buddies: Array,
     favouriteBuddies : [{ type: mongoose.Schema.Types.ObjectId, ref: 'users' }],
     chat: [{ type: mongoose.Schema.Types.ObjectId, ref: 'chats' }],
     conversations_id : [{type : mongoose.Schema.Types.ObjectId, ref: 'conversations'}]
