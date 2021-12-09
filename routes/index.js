@@ -4,6 +4,7 @@ var mongoose = require('mongoose');
 const userModel = require('../models/users');
 const chatModel = require('../models/chats');
 const eventModel = require('../models/events');
+const conversationModel = require('../models/conversations')
 var bcrypt = require('bcrypt');
 var uid2 = require('uid2');
 var fs = require('fs');
@@ -30,10 +31,10 @@ router.post('/sign-up', async function (req, res, next) {
 
   if (!searchUser) {
     var newUser = new userModel({
-      firstname: req.body.firstName,
-      lastname: req.body.lastName,
+      firstname: req.body.firstname,
+      lastname: req.body.lastname,
       email: req.body.email,
-      dateOfBirth:req.body.dateOfBirth,
+      dateofbirth:req.body.dateofbirth,
       gender: req.body.gender,
       addresses: req.body.addresses,
       avatar: req.body.avatar,
@@ -54,7 +55,7 @@ router.post('/sign-up', async function (req, res, next) {
 
 //ROUTE UPLOAD AVATAR
 
-router.post('/uploadAvatar', async function(req, res, next) {
+router.post('/upload-avatar', async function(req, res, next) {
   
   var pictureName = './tmp/'+uniqid()+'.jpg';
   var resultCopy = await req.files.avatar.mv(pictureName);
@@ -88,6 +89,26 @@ router.post('/sign-in', async function (req, res, next) {
 
 });
 
+
+router.post('/add-buddy', async function(req,res, next){
+  let currentUser = await userModel.findOne({
+    token: req.body.userToken,
+  })
+
+
+  let  newConversation = new conversationModel({   
+    
+    conversationRequest : false,
+    conversationToken : uid2(32)
+
+  })
+
+
+    
+
+})
+
+
 //route pour ajouter la table
 
 router.post('/add-table', async function (req, res, next) {
@@ -119,10 +140,11 @@ router.get('/search-table', async function(req,res,next){
   res.json({result: result});
 });
 
+
+
 router.get('/join-table/:_id', async function(req,res,next){
   var result = await eventModel.findOne({_id : req.params._id});
   console.log(req.params._id)
   res.json({result: result});
 });
-
 module.exports = router;

@@ -11,9 +11,9 @@ var messageSchema = mongoose.Schema({
 
 var userSchema = mongoose.Schema({
     token : String,
-    firstName: String,
-    lastName: String,
-    dateOfBirth: Date,
+    firstname: String,
+    lastname: String,
+    dateofbirth: Date,
     password: String,
     gender: String,
     email: String,
@@ -30,6 +30,7 @@ var userSchema = mongoose.Schema({
     event_id: [{ type: mongoose.Schema.Types.ObjectId, ref: 'events' }],
     favouriteBuddies : [{ type: mongoose.Schema.Types.ObjectId, ref: 'users' }],
     chat: [{ type: mongoose.Schema.Types.ObjectId, ref: 'chats' }],
+    conversations_id : [{type : mongoose.Schema.Types.ObjectId, ref: 'conversations'}]
 
   
 })
