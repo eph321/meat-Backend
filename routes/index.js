@@ -90,25 +90,64 @@ router.post('/sign-in', async function (req, res, next) {
 });
 
 
+
 router.post('/add-buddy', async function(req,res, next){
-  let currentUser = await userModel.findOne({ token: req.body.token
-      })
+  let currentUser = await userModel.findOne({token : req.body.userToken});
+  //vérification si le token est déjà présent dans la liste de buddies.
+  if(  currentUser.buddies.some((buddy) => buddy === req.body.token )){
+    res.json({result: false})
+  } else {
+    currentUser.buddies = [...currentUser.buddies, req.body.token];
+    var currentUserSaved = await currentUser.save();
 
-  currentUser.buddies = [...currentUser.buddies, req.body.buddy-token]
-  let UpdatedUser = await currentUser.save()
-  console.log(UpdatedUser.buddies)
-res.json({result: UpdatedUser});
-  })
+    res.json({ result: true, buddies : currentUserSaved });
 
+  }
 
+      });
 
+router.post('/list-related-users',async function (req,res,next){
+  let tokenHandlers = await userModel.find({buddies : req.body.userToken});
 
-
-router.post('/accept-buddy',async function (req,res,next){
-
+  res.json({listOfRelations: tokenHandlers})
 })
 
+router.post('/accept-buddy', async function(req,res, next){
+  let currentUser = await userModel.findOne({token : req.body.userToken});
+  let otherUser = await userModel.find({token : req.body.token, buddies: req.body.userToken })
+  //vérification si le token est déjà présent dans la liste de buddies.
+  if(  currentUser.buddies.some((buddy) => buddy === req.body.token )){
+    res.json({result: false})
+  } else {
+    currentUser.buddies = [...currentUser.buddies, req.body.token];
+    var currentUserSaved = await currentUser.save();
+
+    if(  otherUser !== null ){
+      let  newConversation = new conversationModel({
+        conversationToken :  uid2(32),
+        lastname: req.body.lastname,
+        email: req.body.email,
+        dateofbirth:req.body.dateofbirth,
+        gender: req.body.gender,
+        addresses: req.body.addresses,
+        avatar: req.body.avatar,
+        phone : req.body.phone,
+        preference1: req.body.preference1,
+        preference2: req.body.preference2,
+        preference3: req.body.preference3,
+        description: req.body.description,
+        password: hash,
+        token: uid2(32),
+
+    }
+
+
+    res.json({ result: true, buddies : currentUserSaved });
+  }
+
+});
 router.get('/load-chat-messages',async function(req,res,next){
+  conversationModel.find( { tags: { $all: [req.body.token, req.body.userToken] } } )
 
 })
 router.get('update-chat-messages',async function (req,resn,next){
@@ -145,8 +184,8 @@ router.get('/search-table', async function(req,res,next){
 
 
 router.get('/search-user', async function(req,res,next){
-  var result = await userModel.find();
-  res.json({result: result});
+  let result = await userModel.find();
+  res.json({result});
 });
 
 router.get('/join-table/:_id', async function(req,res,next){
