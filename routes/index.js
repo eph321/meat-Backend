@@ -193,7 +193,7 @@ router.get('/filter-table/:placeType', async function(req,res,next){
 
 router.get('/search-user', async function(req,res,next){
   let result = await userModel.find();
-  res.json({result});
+  res.json({result: result});
 });
 
 router.get('/join-table/:_id', async function(req,res,next){
