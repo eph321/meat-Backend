@@ -171,9 +171,10 @@ router.get('/search-table', async function(req,res,next){
 router.get('/filter-table/:placeType', async function(req,res,next){
 
 console.log(req.params.placeType)
-  var result = await eventModel.find({placeType: req.params.placeType})
 
-  res.json({result})
+  var result = await eventModel.find({placeType: { $all: [req.params.placeType] }})
+  console.log(result)
+ res.json({result})
 })
 
 
