@@ -154,7 +154,7 @@ router.post('/add-table', async function (req, res, next) {
     age: req.body.age,
     capacity: req.body.capacity,
     budget: req.body.budget,
-    token: req.body.token,
+    token: req.body.token, // A supprimer
     planner: req.body.planner
   });
 
@@ -170,6 +170,7 @@ router.get('/search-table', async function(req,res,next){
 
 router.get('/filter-table/:placeType', async function(req,res,next){
 
+console.log(req.params.placeType)
   var result = await eventModel.find({placeType: req.params.placeType})
 
   res.json({result})
