@@ -19,7 +19,7 @@ router.post('/add-table', async function (req, res, next) {
     age: req.body.age,
     capacity: req.body.capacity,
     budget: req.body.budget,
-    token: req.body.token,
+    token: req.body.token, // A supprimer
     planner: req.body.planner
   });
 
@@ -35,9 +35,11 @@ router.get('/search-table', async function(req,res,next){
 
 router.get('/filter-table/:placeType', async function(req,res,next){
 
-  var result = await eventModel.find({placeType: req.params.placeType})
+console.log(req.params.placeType)
 
-  res.json({result})
+  var result = await eventModel.find({placeType: { $all: [req.params.placeType] }})
+  console.log(result)
+ res.json({result})
 })
 
 router.get('/join-table/:_id', async function(req,res,next){
