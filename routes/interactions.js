@@ -26,47 +26,48 @@ router.get('/', function(req, res, next) {
 /* GET users listing prior to adding a buddy  */
 
 router.post('/add-buddy', async function(req,res, next){
+
+
     let currentUser = await userModel.findOne({token : req.body.userToken});
+    let receiverUser = await userModel.findOne({token : req.body.token});
     //vérification si le token est déjà présent dans la liste de buddies.
-    if(  currentUser.buddies.some((buddy) => buddy === req.body.token )){
+    if(  currentUser.buddies.some((buddy) => buddy.token === req.body.token ) && receiverUser.buddies.some((buddy) => buddy.token === req.body.userToken )){
         res.json({result: false})
     } else {
-        currentUser.buddies = [...currentUser.buddies, req.body.token];
+        currentUser.buddies = [...currentUser.buddies, {token : req.body.token, status: true}];
+        receiverUser.buddies = [...receiverUser.buddies, {token : req.body.userToken, status: false}];
         var currentUserSaved = await currentUser.save();
+        var receiverUserSaved = await receiverUser.save();
 
-        res.json({ result: true, buddies : currentUserSaved });
+        res.json({ result: true, requester : currentUserSaved, receiver :receiverUserSaved });
 
     }
 
 });
 
 
-
 router.get('/list-related-users/:token',async function (req,res,next){
-    let tokenHandlers = await userModel.find({buddies : req.params.token});
+    let tokenHandlers = userModel.find({ buddies: { token: req.params.token } })
     let currentUser = await userModel.findOne({token: req.params.token});
+
 
     res.json({listOfRelations: tokenHandlers, currentUser: currentUser})
 })
 
+var roles = ["owner", "admin"];
+
 
 router.post('/accept-buddy', async function(req,res, next){
     let currentUser = await userModel.findOne({token : req.body.userToken});
-    let otherUser = await userModel.find({token : req.body.token, buddies: req.body.userToken })
-    //vérification si le token est déjà présent dans la liste de buddies.
-    if(  currentUser.buddies.some((buddy) => buddy === req.body.token )){
-        res.json({result: false})
-    } else {
-        currentUser.buddies = [...currentUser.buddies, req.body.token];
-        var currentUserSaved = await currentUser.save();
+    let receiverUser = await userModel.findOne({token : req.body.token});
 
-        if(  otherUser !== null ){
-            let  newConversation = new conversationModel({
-                conversationToken :  uid2(32)           })}
+    currentUser.buddies = [...currentUser.buddies, {token : req.body.token, status: true}];
+    receiverUser.buddies = [...receiverUser.buddies, {token : req.body.userToken, status: true}];
+    var currentUserSaved = await currentUser.save();
+    var receiverUserSaved = await receiverUser.save();
 
+    res.json({ result: true, requester : currentUserSaved, receiver :receiverUserSaved });
 
-        res.json({ result: true, buddies : currentUserSaved });
-    }
 
 });
 
