@@ -1,11 +1,13 @@
 var express = require('express');
+const router = express.Router();
 
 const bcrypt = require("bcrypt");
 const uid2 = require("uid2");
-const router = express.Router();
+
 const fs = require('fs');
 const userModel = require('../models/users');
 const conversationModel = require('../models/conversations')
+const eventModel = require("../models/events");
 
 var cloudinary = require('cloudinary').v2;
 cloudinary.config({
@@ -20,11 +22,6 @@ cloudinary.config({
 
 
 /* GET users listing. */
-router.get('/', function(req, res, next) {
-  res.send('respond with a resource');
-});
-
-
 // ROUTE POUR SIGN UP
 
 router.post('/sign-up', async function (req, res, next) {
@@ -101,29 +98,7 @@ router.post('/list-related-users',async function (req,res,next){
   res.json({listOfRelations: tokenHandlers})
 })
 
-router.post('/accept-buddy', async function(req,res, next){
-  let currentUser = await userModel.findOne({token : req.body.userToken});
-  let otherUser = await userModel.find({token : req.body.token, buddies: req.body.userToken })
-  //vérification si le token est déjà présent dans la liste de buddies.
-  if(  currentUser.buddies.some((buddy) => buddy === req.body.token )){
-    res.json({result: false})
-  } else {
-    currentUser.buddies = [...currentUser.buddies, req.body.token];
-    var currentUserSaved = await currentUser.save();
 
-    if(  otherUser !== null ){
-      let  newConversation = new conversationModel({
-        conversationToken :  uid2(32)           })}
-
-
-    res.json({ result: true, buddies : currentUserSaved });
-  }
-
-});
-router.get('/load-chat-messages',async function(req,res,next){
-  conversationModel.find( { tags: { $all: [req.body.token, req.body.userToken] } } )
-
-})
 router.get('update-chat-messages',async function (req,resn,next){
 
 })
@@ -133,19 +108,6 @@ router.get('/search-user', async function(req,res,next){
   res.json({result: result});
 });
 
-router.post('/add-buddy', async function(req,res, next){
-  let currentUser = await userModel.findOne({token : req.body.userToken});
-  //vérification si le token est déjà présent dans la liste de buddies.
-  if(  currentUser.buddies.some((buddy) => buddy === req.body.token )){
-    res.json({result: false})
-  } else {
-    currentUser.buddies = [...currentUser.buddies, req.body.token];
-    var currentUserSaved = await currentUser.save();
 
-    res.json({ result: true, buddies : currentUserSaved });
-
-  }
-
-});
 
 module.exports = router;

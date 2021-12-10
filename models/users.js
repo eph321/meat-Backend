@@ -20,7 +20,7 @@ var userSchema = mongoose.Schema({
     addresses: String,
     avatar: String,
     phone : String,
-    preferences: array,
+    preferences: Array,
     preference1: String,
     preference2: String,
     preference3: String,

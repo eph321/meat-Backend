@@ -1,6 +1,4 @@
 var express = require('express');
-
-
 const uid2 = require("uid2");
 const router = express.Router();
 
@@ -9,6 +7,7 @@ const router = express.Router();
 const userModel = require('../models/users');
 
 const conversationModel = require('../models/conversations')
+const eventModel = require("../models/events");
 
 var cloudinary = require('cloudinary').v2;
 cloudinary.config({
@@ -43,12 +42,13 @@ router.post('/add-buddy', async function(req,res, next){
 
 
 
-router.post('/list-related-users',async function (req,res,next){
-    let tokenHandlers = await userModel.find({buddies : req.body.userToken});
-    let currentUser = await userModel.findOne({token: req.body.userToken});
+router.get('/list-related-users/:token',async function (req,res,next){
+    let tokenHandlers = await userModel.find({buddies : req.params.token});
+    let currentUser = await userModel.findOne({token: req.params.token});
 
     res.json({listOfRelations: tokenHandlers, currentUser: currentUser})
 })
+
 
 router.post('/accept-buddy', async function(req,res, next){
     let currentUser = await userModel.findOne({token : req.body.userToken});
