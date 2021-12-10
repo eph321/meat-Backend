@@ -20,6 +20,7 @@ var userSchema = mongoose.Schema({
     addresses: String,
     avatar: String,
     phone : String,
+    preferences: array,
     preference1: String,
     preference2: String,
     preference3: String,
@@ -31,7 +32,7 @@ var userSchema = mongoose.Schema({
     buddies: Array,
     favouriteBuddies : [{ type: mongoose.Schema.Types.ObjectId, ref: 'users' }],
     chat: [{ type: mongoose.Schema.Types.ObjectId, ref: 'chats' }],
-    conversations_id : [{type : mongoose.Schema.Types.ObjectId, ref: 'conversations'}]
+
 
   
 })
