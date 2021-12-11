@@ -47,7 +47,7 @@ router.post('/add-buddy', async function(req,res, next){
 
 
 router.get('/list-related-users/:token',async function (req,res,next){
-    let tokenHandlers = userModel.find({ buddies: { token: req.params.token } })
+    let tokenHandlers = await userModel.find({buddies : { $all: [ { "$elemMatch" : {token: req.params.token}}]}})
     let currentUser = await userModel.findOne({token: req.params.token});
 
 
