@@ -104,11 +104,11 @@ router.post('/decline-buddy', async function(req,res, next){
 router.post('/conversation',async function(req,res,next){
     let currentUser = await userModel.findOne({token : req.body.userToken});
     let receiverUser = await userModel.findOne({token : req.body.token});
-    console.log(currentUser.id)
+
     let conversationExists = await conversationModel.find({talkers : { $all: [ currentUser.id,receiverUser.id]}})
     if(conversationExists.length !== 0){
-        console.log(conversationExists)
-        res.json({ result: false,conv : conversationExists });
+       console.log(conversationExists[0]._id )
+        res.json({ result: false,conv : conversationExists[0]._id  });
     } else {
         let newConversation = new conversationModel({
         })
@@ -116,7 +116,7 @@ router.post('/conversation',async function(req,res,next){
 
         let savedConversation = await newConversation.save()
 
-        res.json({ result: true,conv: savedConversation  });
+        res.json({ result: true,conv: savedConversation[0]._id  });
     }
 
 
