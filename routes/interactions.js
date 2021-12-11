@@ -25,7 +25,13 @@ router.get('/', function(req, res, next) {
 
 /* GET users listing prior to adding a buddy  */
 
+router.get('/search-user', async function(req,res,next){
+    let result = await userModel.find();
+    res.json({result: result});
+});
+
 router.post('/add-buddy', async function(req,res, next){
+    //Demande d'ami par l'user
 
 
     let currentUser = await userModel.findOne({token : req.body.userToken});
@@ -60,52 +66,69 @@ var roles = ["owner", "admin"];
 router.post('/accept-buddy', async function(req,res, next){
     let currentUser = await userModel.findOne({token : req.body.userToken});
     let receiverUser = await userModel.findOne({token : req.body.token});
+    let receiverIndex = currentUser.buddies.map((el) => el.token).indexOf(req.body.token)
+    currentUser.buddies[receiverIndex].status = true;
+    let currentUserSaved = await currentUser.save();
 
-    currentUser.buddies = [...currentUser.buddies, {token : req.body.token, status: true}];
-    receiverUser.buddies = [...receiverUser.buddies, {token : req.body.userToken, status: true}];
-    var currentUserSaved = await currentUser.save();
-    var receiverUserSaved = await receiverUser.save();
+    console.log(receiverIndex);
 
-    res.json({ result: true, requester : currentUserSaved, receiver :receiverUserSaved });
+        // var receiverUserSaved = await receiverUser.save();
+
+        res.json({ result: true, requester : currentUserSaved, receiver :receiverUser });
 
 
 });
 
 router.post('/decline-buddy', async function(req,res, next){
+    // récupère l'user et l'user qui a fait une demande d'ami :
+
     let currentUser = await userModel.findOne({token : req.body.userToken});
-    let otherUser = await userModel.find({token : req.body.token, buddies: req.body.userToken })
+    let receiverUser = await userModel.findOne({token : req.body.token});
+
     //vérification si le token est déjà présent dans la liste de buddies.
-    if(  otherUser.buddies.some((buddy) => buddy === req.body.token )){
-        let tempFollowers = otherUser.buddies.filter((buddy) => buddy !== req.body.userToken)
+    if(  currentUser.buddies.some((buddy) => buddy.token !== req.body.token ) && receiverUser.buddies.some((buddy) => buddy.token !== req.body.userToken )){
         res.json({result: false})
-
     } else {
-        currentUser.buddies = [...currentUser.buddies, req.body.token];
+        currentUser.buddies = [...currentUser.buddies.filter((buddy) => buddy.token !== req.body.token)];
+        receiverUser.buddies = [...receiverUser.buddies.filter((buddy) => buddy.token !== req.body.userToken)];
         var currentUserSaved = await currentUser.save();
+        var receiverUserSaved = await receiverUser.save();
 
-        if(  otherUser  ){
-            let  newConversation = new conversationModel({
-                conversationToken :  uid2(32)           })}
+        res.json({ result: true, requester : currentUserSaved, receiver :receiverUserSaved });
 
-
-        res.json({ result: true, buddies : currentUserSaved });
     }
 
 });
 
 
-router.get('/load-chat-messages',async function(req,res,next){
-    conversationModel.find( { tags: { $all: [req.body.token, req.body.userToken] } } )
+router.post('/conversation',async function(req,res,next){
+    let currentUser = await userModel.findOne({token : req.body.userToken});
+    let receiverUser = await userModel.findOne({token : req.body.token});
+    console.log(currentUser.id)
+    let conversationExists = await conversationModel.find({talkers : { $all: [ currentUser.id,receiverUser.id]}})
+    if(conversationExists.length !== 0){
+        console.log(conversationExists)
+        res.json({ result: false,conv : conversationExists });
+    } else {
+        let newConversation = new conversationModel({
+        })
+        newConversation.talkers = [currentUser.id,receiverUser.id];
+
+        let savedConversation = await newConversation.save()
+
+        res.json({ result: true,conv: savedConversation  });
+    }
+
 
 })
+
+
+
 router.get('update-chat-messages',async function (req,resn,next){
 
 })
 
-router.get('/search-user', async function(req,res,next){
-    let result = await userModel.find();
-    res.json({result: result});
-});
+
 
 
 module.exports = router;

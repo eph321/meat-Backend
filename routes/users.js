@@ -92,16 +92,6 @@ router.post('/upload-avatar', async function(req, res, next) {
 
 });
 
-router.post('/list-related-users',async function (req,res,next){
-  let tokenHandlers = await userModel.find({buddies : req.body.userToken});
-
-  res.json({listOfRelations: tokenHandlers})
-})
-
-
-router.get('update-chat-messages',async function (req,resn,next){
-
-})
 
 router.get('/search-user', async function(req,res,next){
   let result = await userModel.find();

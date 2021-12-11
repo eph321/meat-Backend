@@ -11,7 +11,6 @@ const chatSchema = mongoose.Schema({
 
 const conversationSchema = mongoose.Schema({
     chat: [chatSchema],
-    conversationToken : String,
     talkers: [{ type: mongoose.Schema.Types.ObjectId, ref: 'users' }],
 
     
