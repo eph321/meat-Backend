@@ -34,41 +34,42 @@ router.post('/sign-up', async function (req, res, next) {
       firstname: req.body.firstname,
       lastname: req.body.lastname,
       email: req.body.email,
-      dateofbirth:req.body.dateofbirth,
+      dateofbirth: req.body.dateofbirth,
       gender: req.body.gender,
       addresses: req.body.addresses,
       avatar: req.body.avatar,
-      phone : req.body.phone,
+      phone: req.body.phone,
       preference1: req.body.preference1,
-      preference2: req.body.preference2,  
+      preference2: req.body.preference2,
       preference3: req.body.preference3,
       description: req.body.description,
       password: hash,
       token: uid2(32),
     })
-  
-    var newUserSave = await newUser.save()};
-    console.log(newUserSave)
-  
-  res.json({result:newUserSave ? true : false, newUserSave });
+
+    var newUserSave = await newUser.save()
+  };
+  console.log(newUserSave)
+
+  res.json({ result: newUserSave ? true : false, newUserSave });
 });
 
 //ROUTE UPLOAD AVATAR
 
-router.post('/upload-avatar', async function(req, res, next) {
-  
-  var pictureName = './tmp/'+uniqid()+'.jpg';
+router.post('/upload-avatar', async function (req, res, next) {
+
+  var pictureName = './tmp/' + uniqid() + '.jpg';
   var resultCopy = await req.files.avatar.mv(pictureName);
-  if(!resultCopy) {
+  if (!resultCopy) {
     let resultCloudinary = await cloudinary.uploader.upload(pictureName);
     console.log(resultCloudinary)
-    res.json({cloud : resultCloudinary });
+    res.json({ cloud: resultCloudinary });
   } else {
-    res.json({error: resultCopy});
+    res.json({ error: resultCopy });
   }
 
   fs.unlinkSync(pictureName);
-  
+
 });
 
 //ROUTE SIGN in
@@ -91,51 +92,53 @@ router.post('/sign-in', async function (req, res, next) {
 
 
 
-router.post('/add-buddy', async function(req,res, next){
-  let currentUser = await userModel.findOne({token : req.body.userToken});
+router.post('/add-buddy', async function (req, res, next) {
+  let currentUser = await userModel.findOne({ token: req.body.userToken });
   //vérification si le token est déjà présent dans la liste de buddies.
-  if(  currentUser.buddies.some((buddy) => buddy === req.body.token )){
-    res.json({result: false})
+  if (currentUser.buddies.some((buddy) => buddy === req.body.token)) {
+    res.json({ result: false })
   } else {
     currentUser.buddies = [...currentUser.buddies, req.body.token];
     var currentUserSaved = await currentUser.save();
 
-    res.json({ result: true, buddies : currentUserSaved });
+    res.json({ result: true, buddies: currentUserSaved });
 
-  }
-
-      });
-
-router.post('/list-related-users',async function (req,res,next){
-  let tokenHandlers = await userModel.find({buddies : req.body.userToken});
-
-  res.json({listOfRelations: tokenHandlers})
-})
-
-router.post('/accept-buddy', async function(req,res, next){
-  let currentUser = await userModel.findOne({token : req.body.userToken});
-  let otherUser = await userModel.find({token : req.body.token, buddies: req.body.userToken })
-  //vérification si le token est déjà présent dans la liste de buddies.
-  if(  currentUser.buddies.some((buddy) => buddy === req.body.token )){
-    res.json({result: false})
-  } else {
-    currentUser.buddies = [...currentUser.buddies, req.body.token];
-    var currentUserSaved = await currentUser.save();
-
-    if(  otherUser !== null ){
-      let  newConversation = new conversationModel({
-        conversationToken :  uid2(32)           })};
-
-
-    res.json({ result: true, buddies : currentUserSaved });
   }
 
 });
-router.get('/load-chat-messages',async function(req,res,next){
-  conversationModel.find( { tags: { $all: [req.body.token, req.body.userToken] } } )
+
+router.post('/list-related-users', async function (req, res, next) {
+  let tokenHandlers = await userModel.find({ buddies: req.body.userToken });
+
+  res.json({ listOfRelations: tokenHandlers })
+})
+
+router.post('/accept-buddy', async function (req, res, next) {
+  let currentUser = await userModel.findOne({ token: req.body.userToken });
+  let otherUser = await userModel.find({ token: req.body.token, buddies: req.body.userToken })
+  //vérification si le token est déjà présent dans la liste de buddies.
+  if (currentUser.buddies.some((buddy) => buddy === req.body.token)) {
+    res.json({ result: false })
+  } else {
+    currentUser.buddies = [...currentUser.buddies, req.body.token];
+    var currentUserSaved = await currentUser.save();
+
+    if (otherUser !== null) {
+      let newConversation = new conversationModel({
+        conversationToken: uid2(32)
+      })
+    };
+
+
+    res.json({ result: true, buddies: currentUserSaved });
+  }
+
+});
+router.get('/load-chat-messages', async function (req, res, next) {
+  conversationModel.find({ tags: { $all: [req.body.token, req.body.userToken] } })
 
 })
-router.get('update-chat-messages',async function (req,resn,next){
+router.get('update-chat-messages', async function (req, resn, next) {
 
 })
 
@@ -162,31 +165,36 @@ router.post('/add-table', async function (req, res, next) {
   res.json({ result: newTable ? true : false, newTable });
 });
 
-router.get('/search-table', async function(req,res,next){
+router.get('/search-table', async function (req, res, next) {
   var result = await eventModel.find();
 
-  res.json({result: result});
+  res.json({ result: result });
 });
 
-router.get('/filter-table/:placeType', async function(req,res,next){
+router.get('/filter-table/:placeType', async function (req, res, next) {
 
-console.log(req.params.placeType)
+  console.log("req-params", typeof req.params.placeType)
 
-  var result = await eventModel.find({placeType: { $all: [req.params.placeType] }})
-  console.log(result)
- res.json({result})
+  const paramsFromFront = req.params.placeType // string
+  const params = paramsFromFront.split(",") // tableau
+
+  var result = await eventModel.find({ placeType: { $in: params } })
+if(params.length===0){
+  var result = await eventModel.find()
+}
+  res.json({ result })
 })
 
 
-router.get('/search-user', async function(req,res,next){
+router.get('/search-user', async function (req, res, next) {
   let result = await userModel.find();
-  res.json({result: result});
+  res.json({ result: result });
 });
 
-router.get('/join-table/:_id', async function(req,res,next){
-  var result = await eventModel.findOne({_id : req.params._id});
+router.get('/join-table/:_id', async function (req, res, next) {
+  var result = await eventModel.findOne({ _id: req.params._id });
 
-  res.json({result: result});
+  res.json({ result: result });
 
 });
 module.exports = router;
