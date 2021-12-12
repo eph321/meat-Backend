@@ -93,6 +93,7 @@ router.post('/upload-avatar', async function(req, res, next) {
 });
 
 
+
 router.get('/search-user', async function(req,res,next){
   let result = await userModel.find();
   res.json({result: result});
