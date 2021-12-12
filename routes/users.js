@@ -75,7 +75,6 @@ router.post('/sign-in', async function (req, res, next) {
 
 
 });
-
 router.post('/upload-avatar', async function(req, res, next) {
 
   var pictureName = './tmp/'+uniqid()+'.jpg';

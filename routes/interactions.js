@@ -42,8 +42,8 @@ router.post('/add-buddy', async function(req,res, next){
     } else {
         currentUser.buddies = [...currentUser.buddies, {token : req.body.token, status: true}];
         receiverUser.buddies = [...receiverUser.buddies, {token : req.body.userToken, status: false}];
-        var currentUserSaved = await currentUser.save();
-        var receiverUserSaved = await receiverUser.save();
+        let currentUserSaved = await currentUser.save();
+        let receiverUserSaved = await receiverUser.save();
 
         res.json({ result: true, requester : currentUserSaved, receiver :receiverUserSaved });
 
@@ -91,8 +91,8 @@ router.post('/decline-buddy', async function(req,res, next){
     } else {
         currentUser.buddies = [...currentUser.buddies.filter((buddy) => buddy.token !== req.body.token)];
         receiverUser.buddies = [...receiverUser.buddies.filter((buddy) => buddy.token !== req.body.userToken)];
-        var currentUserSaved = await currentUser.save();
-        var receiverUserSaved = await receiverUser.save();
+        let currentUserSaved = await currentUser.save();
+        let receiverUserSaved = await receiverUser.save();
 
         res.json({ result: true, requester : currentUserSaved, receiver :receiverUserSaved });
 
@@ -107,7 +107,7 @@ router.post('/conversation',async function(req,res,next){
 
     let conversationExists = await conversationModel.find({talkers : { $all: [ currentUser.id,receiverUser.id]}})
     if(conversationExists.length !== 0){
-       console.log(conversationExists[0]._id )
+
         res.json({ result: false,conv : conversationExists[0]._id  });
     } else {
         let newConversation = new conversationModel({
@@ -122,11 +122,29 @@ router.post('/conversation',async function(req,res,next){
 
 })
 
+router.post("/list-chat-messages/",async function(req,res,next){
+    let userConversation = await conversationModel.findById( req.body.conversation)
+    await userConversation.populate("token").exec();
+    console.log(userConversation)
+    let userIndex = userConversation.talkers.map((el) => el.token).indexOf(req.body.token)
+    let author = userConversation.talkers[userIndex].firstname;
 
+    res.json({result})
 
-router.get('update-chat-messages',async function (req,resn,next){
 
 })
+
+router.post('/update-chat', async function(req,res, next){
+    let userConversation = await conversationModel.findById( req.body.conversation).populate('users').exec();
+
+    userConversation.chat = [...userConversation.chat,req.body.message]
+    let savedConversation = await userConversation.save()
+
+
+    res.json({ result: true, conversation : savedConversation });
+
+
+});
 
 
 
