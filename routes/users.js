@@ -3,7 +3,7 @@ const router = express.Router();
 
 const bcrypt = require("bcrypt");
 const uid2 = require("uid2");
-
+const uniqid = require('uniqid');
 const fs = require('fs');
 const userModel = require('../models/users');
 const conversationModel = require('../models/conversations')
@@ -77,8 +77,8 @@ router.post('/sign-in', async function (req, res, next) {
 });
 router.post('/upload-avatar', async function(req, res, next) {
 
-  var pictureName = './tmp/'+uniqid()+'.jpg';
-  var resultCopy = await req.files.avatar.mv(pictureName);
+  let pictureName = `./tmp/${uniqid()}.jpg`
+  let resultCopy = await req.files.avatar.mv(pictureName);
   if(!resultCopy) {
     let resultCloudinary = await cloudinary.uploader.upload(pictureName);
     console.log(resultCloudinary)
@@ -88,6 +88,7 @@ router.post('/upload-avatar', async function(req, res, next) {
   }
 
   fs.unlinkSync(pictureName);
+
 
 });
 
