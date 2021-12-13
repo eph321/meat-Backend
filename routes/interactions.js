@@ -122,14 +122,14 @@ router.post('/conversation',async function(req,res,next){
 
 })
 
-router.post("/list-chat-messages/",async function(req,res,next){
-    let userConversation = await conversationModel.findById( req.body.conversation)
-    await userConversation.populate("token").exec();
-    console.log(userConversation)
-    let userIndex = userConversation.talkers.map((el) => el.token).indexOf(req.body.token)
+router.get("/list-chat-messages/:conversation/:token",async function(req,res,next){
+    let userConversation = await conversationModel.findById( req.params.conversation).populate("talkers").exec();
+    console.log(userConversation.talkers)
+    let userIndex = userConversation.talkers.map((el) => el.token).indexOf(req.params.token)
     let author = userConversation.talkers[userIndex].firstname;
+    console.log(author)
 
-    res.json({result})
+    res.json({chatMessages : userConversation.chat, author : author})
 
 
 })

@@ -81,7 +81,7 @@ router.post('/upload-avatar', async function(req, res, next) {
   let resultCopy = await req.files.avatar.mv(pictureName);
   if(!resultCopy) {
     let resultCloudinary = await cloudinary.uploader.upload(pictureName);
-    console.log(resultCloudinary)
+    console.log(resultCloudinary.url)
     res.json({cloud : resultCloudinary });
   } else {
     res.json({error: resultCopy});
