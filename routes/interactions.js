@@ -125,7 +125,6 @@ router.post('/conversation',async function(req,res,next){
 
 router.get("/list-chat-messages/:conversation/:token",async function(req,res,next){
     let userConversation = await conversationModel.findById( req.params.conversation).populate("talkers").exec();
-
     let userIndex = userConversation.talkers.map((el) => el.token).indexOf(req.params.token)
     let author = userConversation.talkers[userIndex].firstname;
 
@@ -136,7 +135,7 @@ router.get("/list-chat-messages/:conversation/:token",async function(req,res,nex
 
 router.post('/update-messages', async function(req,res, next){
     let userConversation = await conversationModel.findById( req.body.conversation)
-    userConversation.chat = [...userConversation.chat, {content: req.body.content, date : req.body.date, author: req.body.author}]
+    userConversation.chat = [...userConversation.chat, {content: req.body.content, date : req.body.date, author: req.body.author,conversation:req.body.conversation}]
     let savedConversation = await userConversation.save()
 
 
