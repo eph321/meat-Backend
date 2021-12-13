@@ -10,6 +10,7 @@ var uid2 = require('uid2');
 var fs = require('fs');
 
 var cloudinary = require('cloudinary').v2;
+const { updateOne } = require('../models/users');
 cloudinary.config({
   cloud_name: "da3gufsec",
   api_key: "713285779721675",
@@ -67,19 +68,41 @@ if(params.length===0){
 
 
 
-router.get('/join-table/:_id', async function (req, res, next) {
+router.get('/join-table/:_id/', async function (req, res, next) {
   var result = await eventModel.findOne({ _id: req.params._id });
 
-  res.json({ result: result });
+  res.json({ result: result, user: user });
 
-<<<<<<< HEAD
-router.get('/join-table/:_id', async function(req,res,next){
-  var result = await eventModel.findOne({_id : req.params._id});
-  console.log(req.params._id, "lalalala");
-  res.json({result: result});
+});
 
-=======
->>>>>>> 758e9a127bdafbc4b785d1f558d8d6dd55151676
+
+router.post('/enter-table', async function(req, res, next) {
+
+
+  var table = await eventModel.findById(req.body.id);
+
+  var user = await userModel.findOne({token : req.body.token});
+  table.guests.push(user.id)
+
+  table = await table.save();
+  
+
+  res.json({table });
+ 
+ });
+
+ router.delete('/delete-guest/:tableId/:token', async function(req,res,next){
+  
+  var table = await eventModel.findById(req.params.tableId);
+
+  var user = await userModel.findOne({token : req.params.token});
+
+
+  table.guests =  table.guests.filter(e => e != user.id);
+
+  table = await table.save();
+
+  res.json({table});
 });
 module.exports = router;
 
