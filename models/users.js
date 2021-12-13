@@ -7,7 +7,12 @@ var messageSchema = mongoose.Schema({
     content: String,
     receiver: String,
    });
- 
+
+var buddiesSchema = mongoose.Schema({
+    token : String,
+    status : Boolean,
+});
+
 
 var userSchema = mongoose.Schema({
     token : String,
@@ -20,6 +25,7 @@ var userSchema = mongoose.Schema({
     addresses: String,
     avatar: String,
     phone : String,
+    preferences: Array,
     preference1: String,
     preference2: String,
     preference3: String,
@@ -28,9 +34,10 @@ var userSchema = mongoose.Schema({
     plannerNote : Number,
     messages: [messageSchema],
     event_id: [{ type: mongoose.Schema.Types.ObjectId, ref: 'events' }],
+    buddies: [buddiesSchema],
     favouriteBuddies : [{ type: mongoose.Schema.Types.ObjectId, ref: 'users' }],
     chat: [{ type: mongoose.Schema.Types.ObjectId, ref: 'chats' }],
-    conversations_id : [{type : mongoose.Schema.Types.ObjectId, ref: 'conversations'}]
+
 
   
 })
