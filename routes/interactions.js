@@ -8,6 +8,7 @@ const userModel = require('../models/users');
 
 const conversationModel = require('../models/conversations')
 const eventModel = require("../models/events");
+const mongoose = require("mongoose");
 
 var cloudinary = require('cloudinary').v2;
 cloudinary.config({
@@ -122,22 +123,19 @@ router.post('/conversation',async function(req,res,next){
 
 })
 
-router.post("/list-chat-messages/",async function(req,res,next){
-    let userConversation = await conversationModel.findById( req.body.conversation)
-    await userConversation.populate("token").exec();
-    console.log(userConversation)
-    let userIndex = userConversation.talkers.map((el) => el.token).indexOf(req.body.token)
+router.get("/list-chat-messages/:conversation/:token",async function(req,res,next){
+    let userConversation = await conversationModel.findById( req.params.conversation).populate("talkers").exec();
+    let userIndex = userConversation.talkers.map((el) => el.token).indexOf(req.params.token)
     let author = userConversation.talkers[userIndex].firstname;
 
-    res.json({result})
 
+    res.json({chatMessages : userConversation.chat, author : author})
 
 })
 
-router.post('/update-chat', async function(req,res, next){
-    let userConversation = await conversationModel.findById( req.body.conversation).populate('users').exec();
-
-    userConversation.chat = [...userConversation.chat,req.body.message]
+router.post('/update-messages', async function(req,res, next){
+    let userConversation = await conversationModel.findById( req.body.conversation)
+    userConversation.chat = [...userConversation.chat, {content: req.body.content, date : req.body.date, author: req.body.author,conversation:req.body.conversation}]
     let savedConversation = await userConversation.save()
 
 

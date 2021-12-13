@@ -5,6 +5,7 @@ const chatSchema = mongoose.Schema({
     date : Date,
     content: String,
     author : String,
+    conversation: String
    });
 
 
