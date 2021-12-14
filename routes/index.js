@@ -53,15 +53,29 @@ router.get('/search-table', async function (req, res, next) {
 
 router.get('/filter-table/:placeType', async function (req, res, next) {
 
-  console.log("req-params", typeof req.params.placeType)
-
   const paramsFromFront = req.params.placeType // string
   const params = paramsFromFront.split(",") // tableau
 
   var result = await eventModel.find({ placeType: { $in: params } })
-if(params.length===0){
-  var result = await eventModel.find()
-}
+
+  res.json({ result })
+})
+
+/// FILTRE  Où ? Homescreen
+
+router.get('/filter-date/:date', async function (req, res, next) {
+
+  console.log("req-params", typeof req.params.date)
+
+  const paramsFromFront = req.params.date  
+  const jsonDate = new Date(paramsFromFront)
+ console.log(jsonDate)
+
+ var result = await eventModel.find({ date: { $date: jsonDate } }) 
+
+
+  //var result = await eventModel.find({ placeType: { $in: params } })
+
   res.json({ result })
 })
 
