@@ -40,7 +40,9 @@ router.post('/add-buddy', async function(req,res, next){
     //vérification si le token est déjà présent dans la liste de buddies.
     if(  currentUser.buddies.some((buddy) => buddy.token === req.body.token ) && receiverUser.buddies.some((buddy) => buddy.token === req.body.userToken )){
         res.json({result: false})
-    } else {
+    } else if (currentUser.token  === receiverUser.token ){
+        res.json({result: false})
+    } else  {
         currentUser.buddies = [...currentUser.buddies, {token : req.body.token, status: true}];
         receiverUser.buddies = [...receiverUser.buddies, {token : req.body.userToken, status: false}];
         let currentUserSaved = await currentUser.save();
