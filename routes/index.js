@@ -46,24 +46,57 @@ router.post('/add-table', async function (req, res, next) {
 });
 
 router.get('/search-table', async function (req, res, next) {
-  var result = await eventModel.find();
+
+  console.log(new Date(Date.now()))
+  var result = await eventModel.find({date: 
+                                      {$gte: new Date(Date.now()).toISOString()}})
+                                      .sort({date:1});
 
   res.json({ result: result });
 });
 
-router.get('/filter-table/:placeType', async function (req, res, next) {
+router.get('/my-events/:token', async function(req, res, next) {
+  
+  const user = await userModel.findOne({token : req.params.token})
 
-  console.log("req-params", typeof req.params.placeType)
+  var result = await eventModel.aggregate([
+    {$match:
+    {$or: [{planner: req.params.token},
+          {guests: user._id}]
+    }},
+    {$sort: {date:1}}
+  ])
+
+  res.json({result})
+})
+
+router.get('/filter-table/:placeType', async function (req, res, next) {
 
   const paramsFromFront = req.params.placeType // string
   const params = paramsFromFront.split(",") // tableau
 
   var result = await eventModel.find({ placeType: { $in: params } })
-if(params.length===0){
-  var result = await eventModel.find()
-}
+
   res.json({ result })
 })
+
+/// FILTRE  Où ? Homescreen
+
+/* router.get('/filter-date/:date', async function (req, res, next) {
+
+  console.log("req-params", typeof req.params.date)
+
+  const paramsFromFront = req.params.date  
+  const jsonDate = new Date(paramsFromFront)
+ console.log(jsonDate)
+
+ var result = await eventModel.find({ date: { $date: jsonDate } }) 
+
+
+  //var result = await eventModel.find({ placeType: { $in: params } })
+
+  res.json({ result })
+}) */
 
 
 
