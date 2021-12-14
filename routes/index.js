@@ -194,10 +194,10 @@ router.post('/filters', async function (req, res, next) {
 
 
 
-router.get('/join-table/:_id/', async function (req, res, next) {
+router.get("/join-table/:_id/", async function (req, res, next) {
   var result = await eventModel.findOne({ _id: req.params._id });
 
-  res.json({ result: result, user: user });
+  res.json({ result: result });
 
 });
 
