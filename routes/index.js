@@ -46,10 +46,20 @@ router.post('/add-table', async function (req, res, next) {
 });
 
 router.get('/search-table', async function (req, res, next) {
-  var result = await eventModel.find();
+
+  console.log(new Date(Date.now()))
+  var result = await eventModel.find({date: 
+                                      {$gte: new Date(Date.now()).toISOString}})
+                                      .sort({date:1});
 
   res.json({ result: result });
 });
+
+router.get('/my-events/:token', async function(req, res, next) {
+  
+  
+  res.json({result})
+})
 
 router.get('/filter-table/:placeType', async function (req, res, next) {
 
