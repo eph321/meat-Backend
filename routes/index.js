@@ -111,21 +111,19 @@ router.get('/join-table/:_id/', async function (req, res, next) {
 
 router.post('/enter-table', async function(req, res, next) {
 
-
   var table = await eventModel.findById(req.body.id);
-
   var user = await userModel.findOne({token : req.body.token});
+//   var tableguest = table.guests.filter(e => e === user.id) 
+// console.log(tableguest)
+//   if(tableguest.length == 0) {
   
-  var tableguest = await eventModel.guests.findOne({_id : user.id})
+//   
 
+//   }
 
-  if(!tableguest) {
-  
-  table.guests.push(user.id)
+    table.guests.push(user.id)
+    table = await table.save();
 
-  table = await table.save();
-  }
-  
  
   res.json({table });
  
