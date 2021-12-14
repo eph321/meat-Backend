@@ -49,7 +49,7 @@ router.get('/search-table', async function (req, res, next) {
 
   console.log(new Date(Date.now()))
   var result = await eventModel.find({date: 
-                                      {$gte: new Date(Date.now()).toISOString}})
+                                      {$gte: new Date(Date.now()).toISOString()}})
                                       .sort({date:1});
 
   res.json({ result: result });
@@ -57,7 +57,16 @@ router.get('/search-table', async function (req, res, next) {
 
 router.get('/my-events/:token', async function(req, res, next) {
   
-  
+  const paramsFromFront = req.params.token
+
+  var result = await eventModel.aggregate([
+    {$match:
+    {$or: [{planner: paramsFromFront},
+          {guests: paramsFromFront}]
+    }},
+    {$sort: {date:1}}
+  ])
+
   res.json({result})
 })
 
@@ -73,7 +82,7 @@ router.get('/filter-table/:placeType', async function (req, res, next) {
 
 /// FILTRE  Où ? Homescreen
 
-router.get('/filter-date/:date', async function (req, res, next) {
+/* router.get('/filter-date/:date', async function (req, res, next) {
 
   console.log("req-params", typeof req.params.date)
 
@@ -87,7 +96,7 @@ router.get('/filter-date/:date', async function (req, res, next) {
   //var result = await eventModel.find({ placeType: { $in: params } })
 
   res.json({ result })
-})
+}) */
 
 
 
