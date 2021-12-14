@@ -57,12 +57,12 @@ router.get('/search-table', async function (req, res, next) {
 
 router.get('/my-events/:token', async function(req, res, next) {
   
-  const paramsFromFront = req.params.token
+  const user = await userModel.findOne({token : req.params.token})
 
   var result = await eventModel.aggregate([
     {$match:
-    {$or: [{planner: paramsFromFront},
-          {guests: paramsFromFront}]
+    {$or: [{planner: req.params.token},
+          {guests: user._id}]
     }},
     {$sort: {date:1}}
   ])
