@@ -19,11 +19,6 @@ cloudinary.config({
 })
 
 
-
-
-
-//route pour ajouter la table
-
 router.post('/add-table', async function (req, res, next) {
 
   var addTable = new eventModel({
@@ -37,7 +32,6 @@ router.post('/add-table', async function (req, res, next) {
     age: req.body.age,
     capacity: req.body.capacity,
     budget: req.body.budget,
-    token: req.body.token, // A supprimer
     planner: req.body.planner
   });
 
@@ -75,7 +69,7 @@ router.get('/my-events/:token', async function (req, res, next) {
   res.json({ result })
 })
 
-router.get('/filter-table/:placeType', async function (req, res, next) {
+/* router.get('/filter-table/:placeType', async function (req, res, next) {
 
   const paramsFromFront = req.params.placeType // string
   const params = paramsFromFront.split(",") // tableau
@@ -86,11 +80,11 @@ router.get('/filter-table/:placeType', async function (req, res, next) {
   })
 
   res.json({ result })
-})
+}) */
 
 /// FILTRE  Où ? Homescreen
 ////////// PARAMS
-router.get('/filter-data/:date/:type', async function (req, res, next) {
+/* router.get('/filter-data/:date/:type', async function (req, res, next) {
 
   const dateFromFront = req.params.date
 
@@ -103,34 +97,34 @@ router.get('/filter-data/:date/:type', async function (req, res, next) {
   var endDate = new Date(dateFromFront);
   endDate.setHours(23);
   endDate.setMinutes(59);
-  endDate.setSeconds(59);
+  endDate.setSeconds(59); */
 
-  /* {
-    $project: { date: { $ifNull: ["$date", "Unspecified"] } },
-                placeType: {$ifNull: ["$placeType", "Unspecified"]}
+/* {
+  $project: { date: { $ifNull: ["$date", "Unspecified"] } },
+              placeType: {$ifNull: ["$placeType", "Unspecified"]}
 
-  }, */
+}, */
 
-  var result = await eventModel.aggregate([
+/* var result = await eventModel.aggregate([
+  {
+    $match:
     {
-      $match:
-      {
-        $and: [{
-          date: {
-            $gte: startDate,
-            $lte: endDate
-          },
-          placeType: req.params.type
-        }
-        ]
+      $and: [{
+        date: {
+          $gte: startDate,
+          $lte: endDate
+        },
+        placeType: req.params.type
       }
-    },
-    { $sort: { date: 1 } }
-  ])
-  console.log(result, "result")
+      ]
+    }
+  },
+  { $sort: { date: 1 } }
+])
+console.log(result, "result")
 
-  res.json({ result })
-})
+res.json({ result })
+}) */
 
 
 router.post('/filters', async function (req, res, next) {
@@ -168,7 +162,7 @@ router.post('/filters', async function (req, res, next) {
     console.log("Date+Type", result, req.body.type)
 
   } else if (req.body.date != null) {
-    let startDate = new Date(req.body.date); // this is the starting date that looks like ISODate("2014-10-03T04:00:00.188Z")
+    let startDate = new Date(req.body.date); // ISODate("2014-10-03T04:00:00.188Z")
 
     startDate.setUTCSeconds(0);
     startDate.setUTCHours(0);
@@ -179,22 +173,21 @@ router.post('/filters', async function (req, res, next) {
     endDate.setUTCMinutes(59);
     endDate.setUTCSeconds(59);
 
-    let dateFilter = await eventModel.find({date: {$gte: startDate, $lte: endDate } })
+    let dateFilter = await eventModel.find({ date: { $gte: startDate, $lte: endDate } })
     var result = dateFilter
     console.log("Date", result)
   }
   else if (req.body.type != null) {
-  const typeFromFront = req.body.type.split(",") // req.body.type = string => tableau
+    const typeFromFront = req.body.type.split(",") // req.body.type = string => tableau
 
-  let typeFilter = await eventModel.find({
-    placeType: { $in: typeFromFront },
-    date: { $gte: new Date(Date.now()).toISOString() }
-  })
+    let typeFilter = await eventModel.find({
+      placeType: { $in: typeFromFront },
+      date: { $gte: new Date(Date.now()).toISOString() }
+    })
 
-  var result = typeFilter
-  console.log("Type", result)
-}
-
+    var result = typeFilter
+    console.log("Type", result)
+  }
 
   res.json({ result })
 })
@@ -210,7 +203,6 @@ router.get('/join-table/:_id/', async function (req, res, next) {
 
 
 router.post('/enter-table', async function (req, res, next) {
-
 
   var table = await eventModel.findById(req.body.id);
 
@@ -234,7 +226,6 @@ router.delete('/delete-guest/:tableId/:token', async function (req, res, next) {
   var table = await eventModel.findById(req.params.tableId);
 
   var user = await userModel.findOne({ token: req.params.token });
-
 
   table.guests = table.guests.filter(e => e != user.id);
 
