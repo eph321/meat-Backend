@@ -99,6 +99,10 @@ router.get('/search-user', async function(req,res,next){
   res.json({result: result});
 });
 
+router.get('/search-userId/:token', async function(req,res,next){
+  let result = await userModel.find({token : req.params.token});
+  res.json({result: result});
+});
 
 
 module.exports = router;
