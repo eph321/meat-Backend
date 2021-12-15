@@ -61,12 +61,12 @@ router.get('/my-events/:token', async function (req, res, next) {
       $match:
       {
         $or: [{ planner: req.params.token },
-        { guests: user._id }]
+        { guests: user._id }],
       }
-    },
+    },  
     { $sort: { date: 1 } }
   ])
-
+ 
   res.json({ result })
 })
 
@@ -132,7 +132,7 @@ router.post('/filters', async function (req, res, next) {
 
   if (req.body.date != null && req.body.type != "") {
 
-    let startDate = new Date(req.body.date); // this is the starting date that looks like ISODate("2014-10-03T04:00:00.188Z")
+    let startDate = new Date(req.body.date); // ISODate("2014-10-03T04:00:00.188Z")
 
     startDate.setUTCSeconds(0);
     startDate.setUTCHours(0);
