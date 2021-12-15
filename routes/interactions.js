@@ -146,10 +146,11 @@ router.post('/update-messages', async function(req,res, next){
 
 });
 
-router.get('/list-table-messages/:eventId/:token', async function(req, res, next) {
-    let userTable = await eventModel.findById( req.params.eventId).populate("guests").exec();
-    let userIndex = userTable.talkers.map((el) => el.token).indexOf(req.params.token)
-    let author = userTable.talkers[userIndex].firstname;
+router.get('/list-table-messages/:tableId/:token', async function(req, res, next) {
+    let userTable = await eventModel.findById( req.params.tableId).populate("guests").exec();
+
+    let userIndex = userTable.guests.map((el) => el.token).indexOf(req.params.token)
+    let author = userTable.guests[userIndex].firstname
     res.json({chatMessages : userTable.chat_messages, author : author})
 });
 
