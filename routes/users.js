@@ -99,8 +99,8 @@ router.get('/search-user', async function(req,res,next){
   res.json({result: result});
 });
 
-router.get('/search-userId/:token', async function(req,res,next){
-  let result = await userModel.find({token : req.params.token});
+router.get('/search-userId/:userToken', async function(req,res,next){
+  let result = await userModel.findOne({token : req.params.userToken});
   res.json({result: result});
 });
 
