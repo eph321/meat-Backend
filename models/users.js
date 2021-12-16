@@ -23,6 +23,8 @@ var userSchema = mongoose.Schema({
     gender: String,
     email: String,
     addresses: String,
+    latitude: Number,
+    longitude: Number,
     avatar: String,
     phone : String,
     preferences: Array,
