@@ -1,7 +1,14 @@
 var mongoose = require('mongoose')
 
+const chatRoomSchema = mongoose.Schema({
+    date : Date,
+    content: String,
+    author : String,
+    room: String
+});
 
 var eventSchema = mongoose.Schema({
+    chat_messages: [chatRoomSchema],
     token : String,
     dateInsert: Date,
     date: Date,
@@ -11,6 +18,8 @@ var eventSchema = mongoose.Schema({
     description: String,
     placeName: String,
     placeAddress: String,
+    latitude: Number,
+    longitude: Number,
     placeType: String,
     placeNote: Number,
     budget: Number, 

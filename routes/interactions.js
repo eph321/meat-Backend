@@ -75,7 +75,6 @@ router.post('/accept-buddy', async function(req,res, next){
 
     console.log(receiverIndex);
 
-        // var receiverUserSaved = await receiverUser.save();
 
         res.json({ result: true, requester : currentUserSaved, receiver :receiverUser });
 
@@ -138,6 +137,7 @@ router.get("/list-chat-messages/:conversation/:token",async function(req,res,nex
 router.post('/update-messages', async function(req,res, next){
     let userConversation = await conversationModel.findById( req.body.conversation)
     userConversation.chat.push({content: req.body.content, date : req.body.date, author: req.body.author,conversation:req.body.conversation})
+
     let savedConversation = await userConversation.save()
 
 
@@ -146,7 +146,25 @@ router.post('/update-messages', async function(req,res, next){
 
 });
 
+router.get('/list-table-messages/:tableId/:token', async function(req, res, next) {
+    let userTable = await eventModel.findById( req.params.tableId).populate("guests").exec();
 
+    let userIndex = userTable.guests.map((el) => el.token).indexOf(req.params.token)
+    let author = userTable.guests[userIndex].firstname
+    res.json({chatMessages : userTable.chat_messages, author : author})
+});
+
+router.post('/update-table-messages', async function(req,res, next){
+    let userTable = await eventModel.findById( req.body.eventId)
+    userTable.chat_messages.push({content: req.body.content, date : req.body.date, author: req.body.author,room:req.body.eventId})
+
+    let savedTable = await userTable.save()
+
+
+    res.json({ result: true, conversation : savedTable });
+
+
+});
 
 
 module.exports = router;
