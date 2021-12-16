@@ -47,7 +47,7 @@ router.get('/search-table', async function (req, res, next) {
     date:
       { $gte: new Date(Date.now()).toISOString() }
   })
-    .sort({ date: 1 });
+    .sort({ date: 1 }).populate("guests").exec();
 
   res.json({ result: result });
 });
