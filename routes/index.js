@@ -32,7 +32,9 @@ router.post('/add-table', async function (req, res, next) {
     age: req.body.age,
     capacity: req.body.capacity,
     budget: req.body.budget,
-    planner: req.body.planner
+    planner: req.body.planner,
+    latitude : req.body.latitude,
+    longitude : req.body.longitude,
   });
 
   var newTable = await addTable.save();
@@ -42,6 +44,7 @@ router.post('/add-table', async function (req, res, next) {
 
 router.get('/search-table', async function (req, res, next) {
 
+ // console.log(new Date())
   //Afficher uniquement les events non passées
   var result = await eventModel.find({
     date:
@@ -66,7 +69,7 @@ router.get('/my-events/:token', async function (req, res, next) {
     },  
     { $sort: { date: 1 } }
   ])
- 
+
   res.json({ result })
 })
 
@@ -130,7 +133,7 @@ res.json({ result })
 
 router.post('/filters', async function (req, res, next) {
 
-  if (req.body.date != null && req.body.type != "") {
+  if (req.body.date != 0 && req.body.type != "") {
 
     let startDate = new Date(req.body.date); // ISODate("2014-10-03T04:00:00.188Z")
 
@@ -162,7 +165,18 @@ router.post('/filters', async function (req, res, next) {
     var result = filteredData
     console.log("Date+Type", result, req.body.type)
 
-  } else if (req.body.date != null) {
+  } else if (req.body.type != "") {
+    const typeFromFront = req.body.type.split(",") // req.body.type = string => tableau
+
+    let typeFilter = await eventModel.find({
+      placeType: { $in: typeFromFront },
+      date: { $gte: new Date(Date.now()).toISOString() }
+    })
+
+    var result = typeFilter
+    console.log("Type", result)
+
+  } else if (req.body.date != 0) {
     let startDate = new Date(req.body.date); // ISODate("2014-10-03T04:00:00.188Z")
 
     startDate.setUTCSeconds(0);
@@ -178,17 +192,7 @@ router.post('/filters', async function (req, res, next) {
     var result = dateFilter
     console.log("Date", result)
   }
-  else if (req.body.type != null) {
-    const typeFromFront = req.body.type.split(",") // req.body.type = string => tableau
-
-    let typeFilter = await eventModel.find({
-      placeType: { $in: typeFromFront },
-      date: { $gte: new Date(Date.now()).toISOString() }
-    })
-
-    var result = typeFilter
-    console.log("Type", result)
-  }
+  
 
   res.json({ result })
 })
