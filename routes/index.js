@@ -202,7 +202,6 @@ router.post('/filters', async function (req, res, next) {
 router.get("/join-table/:_tableId", async function (req, res, next) {
   var result = await eventModel.findOne({ _id: req.params._tableId }).populate("guests").exec();
   var planner = await userModel.findOne({token: result.planner});
-  console.log(planner)
   res.json({ result: result, planner : planner});
 
 });
@@ -213,7 +212,6 @@ router.post('/enter-table', async function (req, res, next) {
   var table = await eventModel.findById(req.body.id);
 
   var user = await userModel.findOne({ token: req.body.token });
-  console.log(user, 'okokok')
 
   if (table.guests.includes(user.id)){
     res.json({table, result: false})
