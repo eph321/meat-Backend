@@ -58,6 +58,7 @@ router.post('/sign-up', async function (req, res, next) {
   res.json({result:newUserSave ? true : false, newUserSave });
 });
 
+
 //ROUTE SIGN in
 
 router.post('/sign-in', async function (req, res, next) {
@@ -71,10 +72,9 @@ router.post('/sign-in', async function (req, res, next) {
   } else {
     res.json({ login: false });
   }
-
-
-
 });
+
+
 router.post('/upload-avatar', async function(req, res, next) {
 
   let pictureName = `./tmp/${uniqid()}.jpg`
@@ -88,10 +88,7 @@ router.post('/upload-avatar', async function(req, res, next) {
   }
 
   fs.unlinkSync(pictureName);
-
-
 });
-
 
 
 router.get('/search-user', async function(req,res,next){
@@ -103,6 +100,32 @@ router.get('/search-userId/:userToken', async function(req,res,next){
   let result = await userModel.findOne({token : req.params.userToken});
   res.json({result: result});
 });
+
+
+router.put('/update-account', async function(req,res,next){
+  let updatedUser = await userModel.findOne({token: token})
+
+  if (existingUser) {
+    updatedUser.email = req.body.email,
+    updatedUser.password = req.body.password,
+    updatedUser.firstname = req.body.firstname,
+    updatedUser.lastname = req.body.lastname,
+    updatedUser.addresses = req.body.addresses,
+    updatedUser.phone = req.body.phone,
+    updatedUser.preference1 = req.body.preference1,
+    updatedUser.preference2 = req.body.preference2,
+    updatedUser.preference3 = req.body.preference3,
+    updatedUser.description = req.body.description,
+    updatedUser.gender = req.body.gender
+  }
+  
+    let newUserData = await existingUser.save()
+  
+  res.json({});
+});
+
+
+
 
 
 module.exports = router;
