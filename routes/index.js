@@ -208,14 +208,15 @@ router.post('/enter-table', async function (req, res, next) {
   var table = await eventModel.findById(req.body.id);
 
   var user = await userModel.findOne({ token: req.body.token });
+  console.log(user, 'okokok')
+
   if (table.guests.includes(user.id)){
     res.json({table, result: false})
   } else {
     table.guests.push(user.id)
     table = await table.save();
-    res.json({ table ,result : true});
+    res.json({ table ,result : true, user});
   }
-
 
 
 
