@@ -233,9 +233,35 @@ router.delete('/delete-guest/:tableId/:token', async function (req, res, next) {
 
   var user = await userModel.findOne({ token: req.params.token });
 
-  table.guests = table.guests.filter(e => e != user.id);
+  
 
-  table = await table.save();
+  // var guestIsPresent = false
+  // if(table.guests.some(e => e = user.id)){
+  //   guestIsPresent = true
+
+  // }
+console.log(user.id, "okokokokokok user id")
+  if(table.guests.includes(user.id)) {
+
+    table.guests = table.guests.filter(e => e != user.id);
+    console.log("guest deleted")
+    table = await table.save();
+
+  } else if(table.planner === req.params.token && table.guests.length > 0) {
+    
+    var guestData = await userModel.findOne({_id : table.guests[0]})
+    table.planner = guestData.token;
+    table.guests = table.guests.filter(e => e._id == guestData._id);
+    console.log("guest replace planner")
+    table = await table.save();
+
+  } else if(table.planner === req.params.token && table.guests.length == 0){
+
+    await table.delete()
+    console.log("table deleted")
+
+  }
+
 
   res.json({ table });
 });
