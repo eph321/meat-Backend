@@ -32,7 +32,9 @@ router.post('/add-table', async function (req, res, next) {
     age: req.body.age,
     capacity: req.body.capacity,
     budget: req.body.budget,
-    planner: req.body.planner
+    planner: req.body.planner,
+    latitude : req.body.latitude,
+    longitude : req.body.longitude,
   });
 
   var newTable = await addTable.save();
