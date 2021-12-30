@@ -1,4 +1,6 @@
 const mongoose = require('mongoose');
+const dotenv = require("dotenv");
+dotenv.config();
 
 const options = {
     connectTimeoutMS: 5000,
@@ -6,7 +8,7 @@ const options = {
     useNewUrlParser: true,
 }
 
-mongoose.connect('mongodb+srv://Neera:azerty12@cluster0.almkw.mongodb.net/meat?retryWrites=true&w=majority',
+mongoose.connect(`mongodb+srv://Neera:${process.env.MONGODB_KEY}@cluster0.almkw.mongodb.net/meat?retryWrites=true&w=majority`,
     options,
     function(err){
         console.log(err);

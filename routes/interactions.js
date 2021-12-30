@@ -1,7 +1,8 @@
 var express = require('express');
 const uid2 = require("uid2");
 const router = express.Router();
-
+const dotenv = require("dotenv");
+dotenv.config();
 
 
 const userModel = require('../models/users');
@@ -13,16 +14,16 @@ const mongoose = require("mongoose");
 var cloudinary = require('cloudinary').v2;
 cloudinary.config({
     cloud_name: "da3gufsec",
-    api_key: "713285779721675",
-    api_secret: "y22CviNN8xuHOULwdIwT5hvcCFk",
+    api_key: process.env.CLOUDINARY_API ,
+    api_secret: process.env.CLOUDINARY_API_SECRET,
     secure: true,
 })
 
 
-/* GET users listing prior to adding a buddy  */
-router.get('/', function(req, res, next) {
-    res.send('respond with a resource');
-});
+// /* GET users listing prior to adding a buddy  */
+// router.get('/', function(req, res, next) {
+//     res.send('respond with a resource');
+// });
 
 /* GET users listing prior to adding a buddy  */
 
@@ -124,7 +125,7 @@ router.post('/conversation',async function(req,res,next){
 
 })
 
-router.get("/list-chat-messages/:conversation/:token",async function(req,res,next){
+router.get("/interactions/list-chat-messages/:conversation/:token",async function(req,res,next){
     let userConversation = await conversationModel.findById( req.params.conversation).populate("talkers").exec();
     let userIndex = userConversation.talkers.map((el) => el.token).indexOf(req.params.token)
     let author = userConversation.talkers[userIndex].firstname;
@@ -151,7 +152,7 @@ router.get('/list-table-messages/:tableId/:token', async function(req, res, next
 
     let userIndex = userTable.guests.map((el) => el.token).indexOf(req.params.token)
     let author = userTable.guests[userIndex].firstname
-    res.json({chatMessages : userTable.chat_messages, author : author})
+        res.json({chatMessages : userTable.chat_messages, author : author})
 });
 
 router.post('/update-table-messages', async function(req,res, next){
